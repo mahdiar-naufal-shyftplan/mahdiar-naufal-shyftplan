@@ -9,7 +9,7 @@
     <h2>Download Google Sheets as CSV</h2>
     <label for="sheetUrl">Enter Google Sheet URL:</label>
     <input type="text" id="sheetUrl" placeholder="Enter Google Sheets URL">
-    <button onclick="authorizeAndDownload()">Download as CSV</button>
+    <button onclick="initClient()">Download as CSV</button>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
@@ -103,7 +103,7 @@
     
         // Load the Google Identity Services library and initialize the client
         window.onload = () => {
-            initClient();
+            // initClient();
         };
     </script>
 </body>
