@@ -9,6 +9,8 @@
     <h2>Download Google Sheets as CSV</h2>
     <label for="sheetUrl">Enter Google Sheet URL:</label>
     <input type="text" id="sheetUrl" placeholder="Enter Google Sheets URL">
+    <label for="csvTimestamp">Enter timestamp for csv file name:</label>
+    <input type="text" id="csvTimestamp" placeholder="2024-10-20T22:00:28.647Z">
     <button onclick="handleAuthClick()">Download as CSV</button>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -87,7 +89,8 @@
                     .then(response => response.json())
                     .then(csvData => {
                         const csvContent = convertToCsv(csvData.values);
-                        downloadFile(`${sheetName}.csv`, csvContent);
+                        const csvTimestamp = document.getElementById("csvTimestamp").value || new Date().toISOString();
+                        downloadFile(`${sheetName.split(' ').join('_')}_${csvTimestamp}.csv`, csvContent);
                     });
                 });
             })
