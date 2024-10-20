@@ -60,21 +60,25 @@
                 alert("Please enter a Google Sheets URL.");
                 return;
             }
-    
+
             const sheetId = extractSheetId(sheetUrl);
             
-            // Use the access token to make authorized requests to the Google Sheets API
             fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch the sheet. Make sure the sheet URL is correct.");
+                }
+                return response.json();
+            })
             .then(data => {
                 const sheets = data.sheets;
                 sheets.forEach(sheet => {
                     const sheetName = sheet.properties.title;
-    
+
                     fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`, {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`
@@ -86,6 +90,10 @@
                         downloadFile(`${sheetName}.csv`, csvContent);
                     });
                 });
+            })
+            .catch(error => {
+                console.error("Error during API call:", error.message);
+                alert("Error: " + error.message);
             });
         }
     
