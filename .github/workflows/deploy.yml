@@ -1,0 +1,25 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Adjust to the branch you want to deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Replace API key in HTML file
+      run: |
+        sed -i 's/YOUR_API_KEY_PLACEHOLDER/${{ secrets.YOUR_API_KEY_PLACEHOLDER }}/g' csv-downloader/index.html
+        sed -i 's/YOUR_CLIENT_ID_PLACEHOLDER/${{ secrets.YOUR_CLIENT_ID_PLACEHOLDER }}/g' csv-downloader/index.html
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./csv-downloader
