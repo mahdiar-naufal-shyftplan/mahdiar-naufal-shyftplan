@@ -16,11 +16,11 @@
         const apiKey = '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'; // Replace with your Google API Key
         const discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
         const scopes = "https://www.googleapis.com/auth/spreadsheets.readonly";
-
+    
         function handleClientLoad() {
             gapi.load('client:auth2', initClient);
         }
-
+    
         function initClient() {
             gapi.client.init({
                 apiKey: apiKey,
@@ -32,28 +32,34 @@
                 updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
             });
         }
-
+    
         function updateSigninStatus(isSignedIn) {
             if (isSignedIn) {
                 // User is signed in
+                console.log("User is signed in.");
             } else {
-                // User not signed in
+                console.log("User is not signed in.");
             }
         }
-
+    
         function authorizeAndDownload() {
             const sheetUrl = document.getElementById("sheetUrl").value;
             if (!sheetUrl) {
                 alert("Please enter a Google Sheets URL.");
                 return;
             }
-
-            gapi.auth2.getAuthInstance().signIn().then(() => {
+    
+            // Sign in the user using a popup window instead of redirect
+            gapi.auth2.getAuthInstance().signIn({
+                prompt: 'consent'
+            }).then(() => {
                 const sheetId = extractSheetId(sheetUrl);
                 downloadSheetsAsCsv(sheetId);
+            }).catch(error => {
+                console.error("Error during sign-in", error);
             });
         }
-
+    
         function extractSheetId(url) {
             const regex = /\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/;
             const matches = url.match(regex);
@@ -64,7 +70,7 @@
                 throw new Error("Invalid Google Sheets URL.");
             }
         }
-
+    
         function downloadSheetsAsCsv(sheetId) {
             gapi.client.sheets.spreadsheets.get({
                 spreadsheetId: sheetId
@@ -73,7 +79,7 @@
                 sheets.forEach(sheet => {
                     const sheetName = sheet.properties.title;
                     const sheetId = sheet.properties.sheetId;
-
+    
                     gapi.client.sheets.spreadsheets.values.get({
                         spreadsheetId: sheetId,
                         range: `${sheetName}!A:Z`
@@ -84,11 +90,11 @@
                 });
             });
         }
-
+    
         function convertToCsv(data) {
             return data.map(row => row.join(",")).join("\n");
         }
-
+    
         function downloadFile(fileName, content) {
             const blob = new Blob([content], { type: 'text/csv' });
             const link = document.createElement('a');
@@ -96,7 +102,7 @@
             link.download = fileName;
             link.click();
         }
-
+    
         // Load the API and make the auth2 library available
         function loadGapi() {
             const script = document.createElement("script");
@@ -104,7 +110,7 @@
             script.onload = () => handleClientLoad();
             document.body.appendChild(script);
         }
-
+    
         loadGapi();
     </script>
 </body>
