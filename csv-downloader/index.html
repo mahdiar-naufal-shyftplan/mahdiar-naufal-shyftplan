@@ -9,8 +9,46 @@
     <h2>Download Google Sheets as CSV</h2>
     <label for="sheetUrl">Enter Google Sheet URL:</label>
     <input type="text" id="sheetUrl" placeholder="Enter Google Sheets URL">
-    <label for="csvTimestamp">Enter timestamp for csv file name:</label>
-    <input type="text" id="csvTimestamp" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="absence_entitlements">Enter timestamp for csv file name:</label>
+    <input type="text" id="absence_entitlements" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="absence_reasons">Enter timestamp for csv file name:</label>
+    <input type="text" id="absence_reasons" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="absences">Enter timestamp for csv file name:</label>
+    <input type="text" id="absences" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="employment_rotation_groups">Enter timestamp for csv file name:</label>
+    <input type="text" id="employment_rotation_groups" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="employments">Enter timestamp for csv file name:</label>
+    <input type="text" id="employments" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="employments_time_accounts">Enter timestamp for csv file name:</label>
+    <input type="text" id="employments_time_accounts" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="evaluations">Enter timestamp for csv file name:</label>
+    <input type="text" id="evaluations" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="locations">Enter timestamp for csv file name:</label>
+    <input type="text" id="locations" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="positions">Enter timestamp for csv file name:</label>
+    <input type="text" id="positions" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="shift_presets">Enter timestamp for csv file name:</label>
+    <input type="text" id="shift_presets" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="shift_rotations">Enter timestamp for csv file name:</label>
+    <input type="text" id="shift_rotations" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="shifts">Enter timestamp for csv file name:</label>
+    <input type="text" id="shifts" placeholder="2024-10-20T22:00:28.647Z">
+    <br />
+    <label for="tags">Enter timestamp for csv file name:</label>
+    <input type="text" id="tags" placeholder="2024-10-20T22:00:28.647Z">
+
     <button onclick="handleAuthClick()">Download as CSV</button>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -89,8 +127,13 @@
                     .then(response => response.json())
                     .then(csvData => {
                         const csvContent = convertToCsv(csvData.values);
-                        const csvTimestamp = document.getElementById("csvTimestamp").value || new Date().toISOString();
-                        downloadFile(`${sheetName.split(' ').join('_')}_${csvTimestamp}.csv`, csvContent);
+                        const csvType = sheetName.split(' ').join('_');
+                        let csvTimestamp = document.getElementById(csvType).value || new Date().toISOString();
+                        // Mac finder cannot accept ':' in file names
+                        if (navigator.userAgent.includes('Mac')) {
+                            csvTimestamp = csvTimestamp.replace(/:/g, '/');
+                        }
+                        downloadFile(`${csvType}_${csvTimestamp}.csv`, csvContent);
                     });
                 });
             })
