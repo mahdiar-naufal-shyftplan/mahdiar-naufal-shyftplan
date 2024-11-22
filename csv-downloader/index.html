@@ -55,8 +55,6 @@
     <script>
         let tokenClient;
         let accessToken = null;
-        const clientId = 'YOUR_CLIENT_ID_PLACEHOLDER'; // Replace with your Google API Client ID
-        const apiKey = 'YOUR_API_KEY_PLACEHOLDER'; // Replace with your Google API Key
         const scopes = "https://www.googleapis.com/auth/spreadsheets.readonly";
     
         // Initialize the Google Identity Services OAuth 2.0 client
@@ -76,11 +74,13 @@
         }
     
         function handleAuthClick() {
-            if (!accessToken) {
-                tokenClient.requestAccessToken();
-            } else {
-                downloadSheetsAsCsv();
-            }
+            // if (!accessToken) {
+            //     tokenClient.requestAccessToken();
+            // } else {
+            //     downloadSheetsAsCsv();
+            // }
+
+            alert('feature disabled, please contact me if you need it')
         }
     
         function extractSheetId(url) {
